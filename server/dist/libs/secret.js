@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CLOUDINARY_API_SECRET = exports.CLOUDINARY_API_KEY = exports.CLOUDINARY_NAME = exports.SMTP_PASS = exports.SMTP_USER = exports.jwtRefreshKey = exports.jwtAccessKey = exports.API_URL = exports.BASE_URL = exports.DB_URL = exports.PORT = void 0;
+require("dotenv/config");
+exports.PORT = process.env.PORT || 5000;
+exports.DB_URL = process.env.DB_URL;
+exports.BASE_URL = process.env.BASE_URL;
+exports.API_URL = process.env.API_URL;
+exports.jwtAccessKey = process.env.JWT_ACCESS_TOKEN;
+exports.jwtRefreshKey = process.env.JWT_REFRESH_TOKEN;
+exports.SMTP_USER = process.env.SMTP_USER;
+exports.SMTP_PASS = process.env.SMTP_PASS;
+exports.CLOUDINARY_NAME = process.env.CLOUDINARY_NAME;
+exports.CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+exports.CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;

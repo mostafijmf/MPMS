@@ -127,6 +127,39 @@ export const createUser = async (body: FormData) => {
   }
 };
 
+// <!-- Update User by Id -->
+export const updateUserById = async (id: string, body: FormData) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/users/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          // "Content-Type": "application/json",
+          Authorization: `accessToken=${await getAccessToken()}`,
+        },
+        credentials: "include",
+        body
+      }
+    );
+
+    const result = await response.json();
+    // console.log("Fetch error response:", result);
+    if (!response.ok) {
+      return apiError(
+        result?.message || "An unexpected error occurred while updating user."
+      );
+    };
+    await revalidateUser();
+
+    return apiSuccess(result, result?.message);
+  } catch (error: any) {
+    return apiError(
+      error?.message || "An unexpected error occurred while updating user."
+    );
+  }
+};
+
 // <!-- Delete user by Id -->
 export const deleteUserById = async (id: string) => {
   try {

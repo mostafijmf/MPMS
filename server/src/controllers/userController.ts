@@ -87,7 +87,12 @@ export const updateUserById: ExpressProps = async (req, res, next) => {
     if (!user)
       return errorResponse(res, { statusCode: 404, message: 'User does not exist' });
 
-    const body = req.body;
+    const body = { ...req.body };
+    // <!-- Handle Avatar -->
+    if (req.file) {
+      body.avatar = (await uploadMediaToCloudinary(req.file)).secure_url
+      if (user?.avatar) await removeMediaFromCloudinary(user.avatar);
+    };
 
     const updatedUser = await User.findByIdAndUpdate(id, body);
 

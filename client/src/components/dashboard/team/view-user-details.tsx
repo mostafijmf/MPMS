@@ -2,26 +2,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { IUser } from "@/types";
-import { Award, Briefcase, Calendar, Eye, Mail, X } from "lucide-react";
+import { Award, Briefcase, Calendar, Eye, Mail } from "lucide-react";
 import moment from "moment";
 import Link from "next/link";
 
 const ViewUserDetails = ({ user }: { user: IUser }) => {
   return (
     <Dialog>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <Button variant={"link"} className="p-0! h-max rounded-full">
-              <Eye className="size-5" />
-            </Button>
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent>View</TooltipContent>
-      </Tooltip>
+      <DialogTrigger asChild>
+        <Button variant={"ghost"} className="w-full justify-start">
+          <Eye />
+          View
+        </Button>
+      </DialogTrigger>
       <DialogContent
         className="w-full max-w-xl! p-0 border-none overflow-hidden"
         xClassName="text-white hover:text-black"

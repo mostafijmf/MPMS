@@ -4,8 +4,8 @@ import Header from "@/components/header";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex">
-      <Sidebar />
-      <div className="w-full">
+      <Sidebar className="max-lg:hidden" />
+      <div className="w-full h-screen overflow-y-auto">
         <Header />
         {children}
       </div>

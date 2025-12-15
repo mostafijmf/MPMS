@@ -34,9 +34,9 @@ const PageContainer = ({
 
   return (
     <div className={cn("p-5", className)}>
-      <div className={cn("flex justify-between items-center", headerClass)}>
+      <div className={cn("flex flex-wrap gap-2 justify-between items-center", headerClass)}>
         <div>
-          <h1 className="text-2xl font-semibold text-primary mb-1">{title}</h1>
+          <h1 className="sm:text-2xl text-xl font-semibold text-primary mb-1">{title}</h1>
           <Breadcrumb>
             <BreadcrumbList>
               {bread?.map((bread, i) => (

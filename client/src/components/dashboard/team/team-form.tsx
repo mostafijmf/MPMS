@@ -1,52 +1,73 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Camera, UserPlus } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input, PasswordInput } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import { UserInput, userSchema } from "@/validators/user-schema";
-import { createUser } from "@/fetch-api/user";
+import { UpdateUserInput, updateUserSchema, UserInput, userSchema } from "@/validators/user-schema";
+import { createUser, updateUserById } from "@/fetch-api/user";
 import { toast } from "sonner";
 import Image from "next/image";
 import { SkillsInput } from "./skills-input";
+import { IUser } from "@/types";
 
 const TeamForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const methods = useForm<UserInput>({
-    resolver: zodResolver(userSchema),
+  return (
+    <div>
+      <Button onClick={() => setIsOpen(true)}>
+        <UserPlus className="size-5" /> Add Member
+      </Button>
+      <TeamFormModal type="create" isOpen={isOpen} setIsOpen={setIsOpen} />
+    </div>
+  );
+};
+
+export default TeamForm;
+
+interface TeamFormModalProps {
+  type: "create" | "update";
+  isOpen: boolean;
+  setIsOpen: (val: boolean) => void;
+  user?: IUser;
+}
+export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const isUpdate = type === "update";
+
+  const methods = useForm<UserInput | UpdateUserInput>({
+    resolver: zodResolver(isUpdate ? updateUserSchema : userSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: user?.name || "",
+      email: user?.email || "",
       password: "",
       confirmPassword: "",
-      department: "",
-      skills: [],
+      department: user?.department || "",
+      skills: user?.skills || [],
     },
   });
   const { handleSubmit, control, watch, reset } = methods;
-  const previewAvatar = watch("avatar");
+  const previewAvatar = watch("avatar") || user?.avatar;
 
   const closeModal = (bool: boolean) => {
-    setOpenModal(bool);
+    setIsOpen(bool);
     if (!bool) reset();
   };
 
   // <!-- Handle Submit -->
-  const onSubmit: SubmitHandler<UserInput> = async (data) => {
+  const onSubmit: SubmitHandler<UserInput | UpdateUserInput> = async (data) => {
     try {
       setIsLoading(true);
 
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
-      formData.append("password", data.password);
-
+      if (data?.password) formData.append("password", data.password);
       if (data?.avatar) formData.append("avatar", data.avatar);
       if (data?.department) formData.append("department", data.department);
       if (data?.skills && data.skills.length > 0) {
@@ -55,7 +76,10 @@ const TeamForm = () => {
         });
       }
 
-      const { error, message, success } = await createUser(formData);
+      const { error, message, success } = isUpdate
+        ? await updateUserById(user?._id as string, formData)
+        : await createUser(formData);
+
       if (success) {
         closeModal(false);
         toast.success(message);
@@ -69,15 +93,10 @@ const TeamForm = () => {
   };
 
   return (
-    <Dialog open={openModal} onOpenChange={closeModal}>
-      <DialogTrigger asChild>
-        <Button>
-          <UserPlus className="size-5" /> Add Member
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="p-7 max-w-xl!">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Add Member</DialogTitle>
+          <DialogTitle className="text-2xl">{isUpdate ? "Edit Member" : "Add Member"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-4">
@@ -93,7 +112,12 @@ const TeamForm = () => {
                     >
                       {previewAvatar ? (
                         <div className="size-full relative">
-                          <Image src={URL.createObjectURL(previewAvatar)} alt="Avatar" fill className="object-cover" />
+                          <Image
+                            src={typeof previewAvatar === "string" ? previewAvatar : URL.createObjectURL(previewAvatar)}
+                            alt="Avatar"
+                            fill
+                            className="object-cover"
+                          />
                           <div className="absolute inset-0 grid place-items-center opacity-0 group-hover/avatar:opacity-100 group-hover/avatar:bg-black/50 transition">
                             <Camera strokeWidth={1.5} className="size-13 text-white" />
                           </div>
@@ -157,7 +181,7 @@ const TeamForm = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name}>Password *</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Password {!isUpdate && "*"}</FieldLabel>
                     <PasswordInput
                       {...field}
                       id={field.name}
@@ -174,7 +198,7 @@ const TeamForm = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name}>Confirm Password *</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Confirm Password {!isUpdate && "*"}</FieldLabel>
                     <PasswordInput
                       {...field}
                       id={field.name}
@@ -223,6 +247,8 @@ const TeamForm = () => {
               <>
                 <Spinner /> Loading...
               </>
+            ) : isUpdate ? (
+              "Update"
             ) : (
               "Submit"
             )}
@@ -232,5 +258,3 @@ const TeamForm = () => {
     </Dialog>
   );
 };
-
-export default TeamForm;

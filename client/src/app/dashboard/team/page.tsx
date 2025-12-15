@@ -10,7 +10,7 @@ const TeamPage = async ({ searchParams }: { searchParams: Promise<{ [key: string
   const query = await searchParams;
 
   const { data } = await getAllUsersByAdmin({
-    limit: Number(query?.limit || 20),
+    limit: Number(query?.limit || 10),
     page: Number(query?.page || 1),
     search: query?.search || "",
     role: query?.role || "",

@@ -58,7 +58,7 @@ export const teamColumns: ColumnDef<IUser>[] = [
   },
   {
     accessorKey: "action",
-    header: "Action",
+    header: () => <div className="text-right">Action</div>,
     size: 150,
     cell: ({ row }) => <TableAction data={row?.original} />,
   },

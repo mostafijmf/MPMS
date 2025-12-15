@@ -16,7 +16,7 @@ userRouter.post('/',
   runValidation,
   createUser
 );
-userRouter.patch('/:id', isLoggedIn, isAdmins, updateUserById);
+userRouter.patch('/:id', isLoggedIn, isAdmins, mediaProcessByMulter.single("avatar"), updateUserById);
 userRouter.delete('/:id', isLoggedIn, isAdmins, deleteUserById);
 
 userRouter.get('/get-profile', isLoggedIn, getUserProfileByToken);

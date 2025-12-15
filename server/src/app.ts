@@ -42,6 +42,16 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): any => {
     });
   }
 
+  // <!-- MongoDB Duplicate field error -->
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue)[0];
+
+    return errorResponse(res, {
+      statusCode: 400,
+      message: `Duplicate field value: ${field} already exists. Please use another value!`,
+    });
+  }
+
   return errorResponse(res, {
     statusCode: err.status,
     message: err.message,

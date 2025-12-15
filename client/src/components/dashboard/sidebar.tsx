@@ -6,8 +6,9 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { logout } from "@/fetch-api/auth";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-const Sidebar = () => {
+const Sidebar = ({ className }: { className?: string }) => {
   const pathname = usePathname();
 
   const handleLogout = async () => {
@@ -29,7 +30,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="min-w-64 h-screen sticky top-0 border-r overflow-hidden">
+    <aside className={cn("lg:min-w-64 h-screen sticky top-0 border-r overflow-hidden", className)}>
       <div className="px-4 h-16 border-b grid place-items-center">
         <h1 className="text-2xl font-semibold">MPMS</h1>
       </div>
