@@ -12,6 +12,7 @@ const app: Application = express();
 // <!-- Middlewares -->
 app.use(cors({ origin: BASE_URL, credentials: true }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/static', express.static('public'));
 

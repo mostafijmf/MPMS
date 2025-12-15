@@ -124,7 +124,6 @@ export const validateAuthToken: ExpressProps = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: "New access token is generated",
-      data: {}
     });
   } catch (error) {
     next(error);
