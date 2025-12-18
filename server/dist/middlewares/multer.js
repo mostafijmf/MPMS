@@ -6,15 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mediaProcessByMulter = void 0;
 const multer_1 = __importDefault(require("multer"));
 // max size in bytes
-// const MAX_IMAGE_SIZE = 1 * 1024 * 1024; // 1MB
-const MAX_FILE_SIZE = 600 * 1024; // 600 KB
+const MAX_FILE_SIZE = 1 * 1024 * 1024;
 // allowed mimetypes
-const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/svg+xml'];
+const ALLOWED_IMAGE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/svg+xml', 'application/pdf'];
 const storage = multer_1.default.memoryStorage();
 const fileFilter = (req, file, cb) => {
     if (ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
         if (file.size > MAX_FILE_SIZE)
-            return cb(new Error("Image size exceeds 600 KB"));
+            return cb(new Error("Image size exceeds 1 MB"));
         return cb(null, true);
     }
     ;

@@ -43,7 +43,6 @@ const AddFormModal = ({ state, onClose }: AddTaskModalProps) => {
   const onSubmit: SubmitHandler<TaskInput> = async (data) => {
     try {
       setIsLoading(true);
-      console.log(data);
       const formData = initializeFormData(data);
       const { error, message, success } = await addTaskBySprintProjectIds({
         projectId: state?.projectId as string,

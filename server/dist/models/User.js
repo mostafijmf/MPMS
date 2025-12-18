@@ -54,6 +54,10 @@ const userSchema = new mongoose_1.Schema({
             validator: (arr) => arr.length <= 20,
             message: "You can add up to 20 skills",
         },
+    },
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User"
     }
 }, { timestamps: true });
 const User = mongoose_1.models.User || (0, mongoose_1.model)("User", userSchema);

@@ -69,7 +69,7 @@ export const updateTaskById = async (id: string, body: FormData) => {
     );
 
     const result = await response.json();
-    console.log("Fetch error response:", result);
+    // console.log("Fetch error response:", result);
     if (!response.ok) {
       return apiError(
         result?.message || "An unexpected error occurred while updating task."

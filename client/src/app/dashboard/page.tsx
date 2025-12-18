@@ -14,7 +14,7 @@ const DashboardPage = async () => {
   const { data, error, message } = await getSummary();
 
   if (error) return <ErrorPage error={message} />;
-  console.log(data);
+  // console.log(data);
   const role = data?.data?.role;
   const isMember = role === "member";
   const stats = data?.data?.stats;

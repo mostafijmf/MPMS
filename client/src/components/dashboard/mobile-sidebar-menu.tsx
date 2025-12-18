@@ -1,10 +1,12 @@
-"use client";
 import { TextAlignJustify } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import Sidebar from "./sidebar";
+import { getUserProfile } from "@/fetch-api/user";
 
-const MobileSidebarMenu = () => {
+const MobileSidebarMenu = async () => {
+  const { data } = await getUserProfile();
+
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
@@ -16,7 +18,7 @@ const MobileSidebarMenu = () => {
         <SheetHeader className="sr-only">
           <SheetTitle>MPMS</SheetTitle>
         </SheetHeader>
-        <Sidebar className="border"/>
+        <Sidebar user={data?.data} className="border" />
       </SheetContent>
     </Sheet>
   );

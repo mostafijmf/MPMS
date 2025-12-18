@@ -11,6 +11,7 @@ const userRouter_1 = __importDefault(require("./routers/userRouter"));
 const responseController_1 = require("./controllers/responseController");
 const authRouter_1 = __importDefault(require("./routers/authRouter"));
 const projectsRouter_1 = __importDefault(require("./routers/projectsRouter"));
+const summaryRouter_1 = __importDefault(require("./routers/summaryRouter"));
 const app = (0, express_1.default)();
 // <!-- Middlewares -->
 app.use((0, cors_1.default)({ origin: secret_1.BASE_URL, credentials: true }));
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter_1.default);
 app.use("/api/users", userRouter_1.default);
 app.use("/api/projects", projectsRouter_1.default);
+app.use("/api/summary", summaryRouter_1.default);
 // <!-- Invalid route -->
 app.all("{*splat}", (req, res) => {
     res.send('Requested resource not found!');

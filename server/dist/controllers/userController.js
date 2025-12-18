@@ -19,8 +19,9 @@ const responseController_1 = require("./responseController");
 const cloudinary_media_handler_1 = require("../libs/cloudinary-media-handler");
 // <!-- Create User -->
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     try {
-        const body = req.body;
+        const body = Object.assign({}, req.body);
         const isEmailExist = yield User_1.default.findOne({ email: body.email });
         if (isEmailExist)
             return (0, responseController_1.errorResponse)(res, {
@@ -33,7 +34,10 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const avatar = req.file ?
             (yield (0, cloudinary_media_handler_1.uploadMediaToCloudinary)(req.file)).secure_url
             : "";
-        yield User_1.default.create(Object.assign(Object.assign({}, body), { avatar }));
+        body.avatar = avatar;
+        if ((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a._id)
+            body.userId = (_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b._id;
+        yield User_1.default.create(body);
         return (0, responseController_1.successResponse)(res, {
             statusCode: 201,
             message: `User has been created successfully`,
@@ -90,7 +94,7 @@ const updateUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const id = req.params.id;
         // if (req?.user?._id !== id)
-        //   return errorResponse(res, { statusCode: 403, message: "Unauthorized user can't proceed" });
+        //   return errorResponse(res, { statusCode: 403, message: "Unauthorized user can't proceed" }); 
         const user = yield User_1.default.findById(id, { password: 0 });
         if (!user)
             return (0, responseController_1.errorResponse)(res, { statusCode: 404, message: 'User does not exist' });
