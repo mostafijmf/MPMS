@@ -12,6 +12,7 @@ export type ExpressProps = (req: Request, res: Response, next: NextFunction) => 
 // <!-- User -->
 export interface IUser {
   _id?: string | ObjectId;
+  userId?: string | ObjectId | IUser;
   name: string;
   email: string;
   password: string;
@@ -26,6 +27,7 @@ export interface IUser {
 // <!-- Project -->
 export interface IProject {
   _id?: string | ObjectId;
+  userId?: string | ObjectId | IUser;
   title: string,
   client: string,
   description: string,
@@ -34,7 +36,6 @@ export interface IProject {
   budget: number,
   status: "planned" | "active" | "completed" | "archived";
   thumbnail: string,
-  members: IUser;
 }
 
 // <!-- Sprint -->
@@ -43,32 +44,28 @@ export interface ISprint {
   title: string,
   sprintNumber: number,
   order: number
-  project: IProject,
+  projectId: ObjectId | IProject,
+  userId: ObjectId | IUser,
   startDate: Date,
   endDate: Date,
 }
 
-// <!-- Task -->
+// <!-- Task --> 
 export interface ITask {
   _id?: string | ObjectId;
-  project: IProject;
-  sprint: ISprint;
   title: string;
   description: string;
-  assignees: IUser[];
+  assigns: IUser[];
   estimateHours: number;
   priority: "low" | "medium" | "high";
   status: "todo" | "in_progress" | "review" | "done";
   dueDate: Date;
+  projectId: IProject;
+  sprintId: ISprint;
   attachments: IAttachment;
-  subtasks: ISubtask;
   comments: IComment
 }
 
-export interface ISubtask {
-  title: string;
-  done: boolean;
-}
 export interface IAttachment {
   filename: string;
   url: string;
@@ -81,5 +78,5 @@ export interface IComment {
   author: IUser;
   task: ITask;
   body: string;
-  parent: IComment | null;
+  parentId: IComment | null;
 }

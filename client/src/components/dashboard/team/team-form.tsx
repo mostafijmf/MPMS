@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { SkillsInput } from "./skills-input";
 import { IUser } from "@/types";
+import { initializeFormData } from "@/lib/utils";
 
 const TeamForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,18 +65,8 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
     try {
       setIsLoading(true);
 
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      if (data?.password) formData.append("password", data.password);
-      if (data?.avatar) formData.append("avatar", data.avatar);
-      if (data?.department) formData.append("department", data.department);
-      if (data?.skills && data.skills.length > 0) {
-        data?.skills.forEach((skill) => {
-          formData.append("skills[]", skill);
-        });
-      }
-
+      const formData = initializeFormData(data);
+      
       const { error, message, success } = isUpdate
         ? await updateUserById(user?._id as string, formData)
         : await createUser(formData);
@@ -94,7 +85,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="p-7 max-w-xl!">
+      <DialogContent className="sm:p-7 max-sm:pb-10 max-w-xl! max-h-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">{isUpdate ? "Edit Member" : "Add Member"}</DialogTitle>
         </DialogHeader>
@@ -105,7 +96,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
               control={control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <div className="flex justify-center">
+                  <div className="flex justify-center max-sm:py-5">
                     <div
                       className="size-39 rounded-full bg-primary/10 cursor-pointer border overflow-hidden hover:bg-black/50 group/avatar transition grid place-items-center"
                       onClick={() => document.getElementById("avatar")?.click()}
@@ -146,7 +137,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
                 name="name"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid} className="gap-1 sm:col-span-1 col-span-2">
                     <FieldLabel htmlFor={field.name}>Name *</FieldLabel>
                     <Input
                       {...field}
@@ -163,7 +154,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
                 name="email"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid} className="gap-1 sm:col-span-1 col-span-2">
                     <FieldLabel htmlFor={field.name}>Email address *</FieldLabel>
                     <Input
                       {...field}
@@ -180,7 +171,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
                 name="password"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid} className="gap-1 sm:col-span-1 col-span-2">
                     <FieldLabel htmlFor={field.name}>Password {!isUpdate && "*"}</FieldLabel>
                     <PasswordInput
                       {...field}
@@ -197,7 +188,7 @@ export const TeamFormModal = ({ type, isOpen, setIsOpen, user }: TeamFormModalPr
                 name="confirmPassword"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <Field data-invalid={fieldState.invalid} className="gap-1 sm:col-span-1 col-span-2">
                     <FieldLabel htmlFor={field.name}>Confirm Password {!isUpdate && "*"}</FieldLabel>
                     <PasswordInput
                       {...field}

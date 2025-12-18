@@ -7,8 +7,9 @@ import { LogOut } from "lucide-react";
 import { logout } from "@/fetch-api/auth";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { IUser } from "@/types";
 
-const Sidebar = ({ className }: { className?: string }) => {
+const Sidebar = ({ className, user }: { className?: string; user: IUser }) => {
   const pathname = usePathname();
 
   const handleLogout = async () => {
@@ -36,23 +37,24 @@ const Sidebar = ({ className }: { className?: string }) => {
       </div>
       <div className="h-[calc(100%-64px)] flex flex-col justify-between overflow-y-auto">
         <ul className="space-y-1 px-3 my-3">
-          {sidebarMenu.map((item, i) => (
-            <li key={i}>
-              <Button
-                asChild
-                variant={pathname === item.path ? "secondary" : "ghost"}
-                size={"lg"}
-                className="w-full h-11 justify-start rounded-sm cursor-pointer"
-              >
-                <Link href={item.path}>
-                  {<item.icon className="size-5" />}
-                  {item.label}
-                </Link>
-              </Button>
-            </li>
-          ))}
+          {sidebarMenu.map((item, i) =>
+            item.roleAccess.find((f) => f === user?.role) ? (
+              <li key={i}>
+                <Button
+                  asChild
+                  variant={pathname === item.path ? "secondary" : "ghost"}
+                  size={"lg"}
+                  className="w-full h-11 justify-start rounded-sm cursor-pointer"
+                >
+                  <Link href={item.path}>
+                    {<item.icon className="size-5" />}
+                    {item.label}
+                  </Link>
+                </Button>
+              </li>
+            ) : null
+          )}
         </ul>
-        {/* <ToggleTheme /> */}
         <div className="px-3 pb-5">
           <Button
             onClick={handleLogout}

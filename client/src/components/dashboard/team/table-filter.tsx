@@ -16,7 +16,7 @@ const TableFilter = () => {
       if (value) set("search", value);
       else remove("search");
     }, 300);
-  };
+  }; 
 
   return (
     <div className="mb-4 flex items-center justify-between gap-3">

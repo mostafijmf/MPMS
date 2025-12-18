@@ -5,6 +5,11 @@ import TeamForm from "@/components/dashboard/team/team-form";
 import { DataTable } from "@/components/data-table";
 import PaginationController from "@/components/pagination-controller";
 import { getAllUsersByAdmin } from "@/fetch-api/user";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Teams",
+};
 
 const TeamPage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) => {
   const query = await searchParams;

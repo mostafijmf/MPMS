@@ -38,10 +38,10 @@ const projectSchema = new Schema<IProject>({
     default: "planned"
   },
   thumbnail: String,
-  members: [{
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User"
-  }]
+  }
 }, { timestamps: true });
 
 const Project = models.Project || model("Project", projectSchema);

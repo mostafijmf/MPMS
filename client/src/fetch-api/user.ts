@@ -8,7 +8,9 @@ import { getAccessToken } from "@/lib/cookie-handler";
 export const revalidateUser = async () => {
   revalidateTag("users", "max");
   revalidateTag("user", "max");
+  revalidateTag("summary", "max");
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/teams");
 };
 
 // <!-- Get all users by admin/manager -->

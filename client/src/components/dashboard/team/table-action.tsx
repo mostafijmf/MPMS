@@ -38,7 +38,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TeamFormModal } from "./team-form";
 
 const TableAction = ({ data }: { data: IUser }) => {
-  const [isOpenEdit, setIsOpenEdit] = useState<IUser | null>(null);
+  const [isEditForm, setIsEditForm] = useState<IUser | null>(null);
 
   return (
     <div className="flex items-center gap-4 justify-end">
@@ -59,7 +59,7 @@ const TableAction = ({ data }: { data: IUser }) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild>
-            <Button variant={"ghost"} className="w-full justify-start" onClick={() => setIsOpenEdit(data)}>
+            <Button variant={"ghost"} className="w-full justify-start" onClick={() => setIsEditForm(data)}>
               <Pencil />
               Edit
             </Button>
@@ -80,8 +80,8 @@ const TableAction = ({ data }: { data: IUser }) => {
       {/* <!-- Edit Form Modal --> */}
       <TeamFormModal
         type="update"
-        isOpen={isOpenEdit ? true : false}
-        setIsOpen={() => setIsOpenEdit(null)}
+        isOpen={isEditForm ? true : false}
+        setIsOpen={() => setIsEditForm(null)}
         user={data}
       />
     </div>

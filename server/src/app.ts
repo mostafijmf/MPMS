@@ -6,6 +6,7 @@ import userRouter from "./routers/userRouter";
 import { errorResponse } from "./controllers/responseController";
 import authRouter from "./routers/authRouter";
 import projectsRouter from "./routers/projectsRouter";
+import summaryRouter from "./routers/summaryRouter";
 
 const app: Application = express();
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/projects", projectsRouter);
+app.use("/api/summary", summaryRouter);
 
 
 // <!-- Invalid route -->

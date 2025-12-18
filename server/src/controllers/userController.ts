@@ -7,7 +7,7 @@ import { removeMediaFromCloudinary, uploadMediaToCloudinary } from "../libs/clou
 // <!-- Create User -->
 export const createUser: ExpressProps = async (req, res, next) => {
   try {
-    const body = req.body;
+    const body = { ...req.body };
 
     const isEmailExist = await User.findOne({ email: body.email });
     if (isEmailExist) return errorResponse(res, {
@@ -22,7 +22,10 @@ export const createUser: ExpressProps = async (req, res, next) => {
       (await uploadMediaToCloudinary(req.file)).secure_url
       : "";
 
-    await User.create({ ...body, avatar });
+    body.avatar = avatar
+    if (req?.user?._id) body.userId = req?.user?._id;
+
+    await User.create(body);
 
     return successResponse(res, {
       statusCode: 201,
@@ -81,7 +84,7 @@ export const updateUserById: ExpressProps = async (req, res, next) => {
     const id = req.params.id;
 
     // if (req?.user?._id !== id)
-    //   return errorResponse(res, { statusCode: 403, message: "Unauthorized user can't proceed" });
+    //   return errorResponse(res, { statusCode: 403, message: "Unauthorized user can't proceed" }); 
 
     const user = await User.findById(id, { password: 0 });
     if (!user)

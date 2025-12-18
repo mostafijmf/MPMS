@@ -53,6 +53,10 @@ const userSchema = new Schema<IUser>(
         validator: (arr) => arr.length <= 20,
         message: "You can add up to 20 skills",
       },
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
     }
   },
   { timestamps: true }

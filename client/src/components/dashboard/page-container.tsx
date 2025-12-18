@@ -28,7 +28,11 @@ const PageContainer = ({
   headerRightContent,
 }: PageContainerProps) => {
   const defaultBread = { label: "Dashboard", path: "/dashboard" };
-  const bread = breadcrumb ? (Array.isArray(breadcrumb) ? breadcrumb : [defaultBread, breadcrumb]) : [defaultBread];
+  const bread = breadcrumb
+    ? Array.isArray(breadcrumb)
+      ? [defaultBread, ...breadcrumb]
+      : [defaultBread, breadcrumb]
+    : [defaultBread];
 
   const breadLen = bread?.length;
 

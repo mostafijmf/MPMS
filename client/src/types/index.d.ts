@@ -26,7 +26,7 @@ export interface IProject {
   budget: number,
   status: "planned" | "active" | "completed" | "archived";
   thumbnail: string,
-  members: IUser;
+  userId?: string | IUser;
 }
 
 // <!-- Sprint -->
@@ -35,7 +35,8 @@ export interface ISprint {
   title: string,
   sprintNumber: number,
   order: number
-  project: IProject,
+  projectId: string | IProject,
+  userId: string | IUser,
   startDate: Date,
   endDate: Date,
 }
@@ -43,24 +44,21 @@ export interface ISprint {
 // <!-- Task -->
 export interface ITask {
   _id?: string | ObjectId;
-  project: IProject;
-  sprint: ISprint;
   title: string;
   description: string;
-  assignees: IUser[];
+  assigns: IUser[];
   estimateHours: number;
   priority: "low" | "medium" | "high";
   status: "todo" | "in_progress" | "review" | "done";
   dueDate: Date;
-  attachments: IAttachment;
-  subtasks: ISubtask;
-  comments: IComment
+  projectId: IProject;
+  sprintId: ISprint;
+  attachments: IAttachment[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  // comments: IComment
 }
 
-export interface ISubtask {
-  title: string;
-  done: boolean;
-}
 export interface IAttachment {
   filename: string;
   url: string;
@@ -73,7 +71,7 @@ export interface IComment {
   author: IUser;
   task: ITask;
   body: string;
-  parent: IComment | null;
+  parentId: IComment | null;
 }
 
 

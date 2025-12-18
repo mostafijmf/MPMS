@@ -4,12 +4,13 @@ import { getUserProfile } from './fetch-api/user';
 import { validateAuth } from './fetch-api/auth';
 import { deleteCookieHandler } from './lib/cookie-handler';
 
-const adminRoute = [
-  "/dashboard/team",
-]
+
+const routeRoles: Record<string, string[]> = {
+  "/dashboard/team": ["admin"],
+  "/dashboard/projects": ["admin", "manager", "member"],
+};
 
 export async function proxy(request: NextRequest) {
-  const user: IUser = (await getUserProfile()).data?.data;
   const pathname = request.nextUrl.pathname;
   const accessToken = request.cookies.get("accessToken");
   const refreshToken = request.cookies.get("refreshToken");
@@ -17,20 +18,29 @@ export async function proxy(request: NextRequest) {
   // Check user authentication
   if (!accessToken && !refreshToken)
     return NextResponse.redirect(new URL("/login", request.nextUrl));
-  else if (!accessToken && refreshToken) {
+
+  if (!accessToken && refreshToken) {
     const res = await validateAuth();
-    if (!res.success)
+    if (!res.success) {
+      await deleteCookieHandler(["accessToken", "refreshToken"]);
       return NextResponse.redirect(new URL("/login", request.nextUrl));
+    }
   }
 
   if (pathname === '/login' && refreshToken)
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
 
-  // Redirect to login if user role isn't admin or manager
-  // if (adminRoute.includes(pathname) && !(user?.role === "admin" || user?.role === "manager")) {
-  //   await deleteCookieHandler(["accessToken", "refreshToken"])
-  //   return NextResponse.redirect(new URL("/login", request.nextUrl));
-  // }
+
+  // Role-based route protection
+  if (Object.keys(routeRoles).includes(pathname)) {
+    const user: IUser = (await getUserProfile()).data?.data;
+    const allowedRoles = routeRoles[pathname];
+
+    if (!user || !allowedRoles.includes(user.role)) {
+      await deleteCookieHandler(["accessToken", "refreshToken"]);
+      return NextResponse.redirect(new URL("/login", request.nextUrl));
+    }
+  }
 
   return NextResponse.next();
 }
